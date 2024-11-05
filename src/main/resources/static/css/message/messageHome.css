@@ -1,0 +1,264 @@
+@charset "UTF-8";
+
+html {
+	font-size: clamp(14px, 1.5vw, 24px); /*최소,중간,최대값*/
+}
+
+.message-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: calc(100% - 1.5px);
+	border: 1.5px solid #E2E2E2;
+	border-radius: 30px;
+	background-color: #f2f2f2;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-size: 2.2rem;
+	overflow: hidden; /* 내용이 많아지면 스크롤생성 */
+}
+
+.message-container * {
+	width: 90%;
+}
+/* =======검색창======= */
+#search {
+	display: flex;
+	background-color: #D9D9D9;
+	flex-direction: row;
+	min-height: 48px;
+	min-width: 90%;
+	height: 48px;
+	border-radius: 20px;
+	box-sizing: border-box;
+	margin-top: 20px;
+	padding: 0;
+}
+
+.beforePage {
+	border: none;
+	background-color: transparent;
+	justify-content: flex-start;
+	width: 10%;
+}
+
+#searchInput {
+	border: none;
+	background-color: transparent; /* 투명 */
+	justify-content: center;
+	width: 80%;
+	font-size: 2.2rem;
+	font-weight: bold;
+	outline: none;
+	background-color: transparent; /* 클릭 시 테두리 없애기 */
+}
+
+#searchBtn {
+	border: none;
+	background-color: transparent;
+	justify-content: flex-end;
+	width: 10%;
+}
+
+.barBtns {
+	width: 35px;
+	height: 35px;
+}
+/* 타이틀 */
+#title {
+	font-size: 2.2rem;
+	font-weight: bold;
+	text-align: left;
+	position: relative;
+	top: 20px;
+}
+
+#title::after {
+	content: ""; /* 내용 없이 가상 요소 생성 */
+	display: block; /* 블록으로 설정하여 공간 차지 */
+	height: 20px; /* 원하는 여백 높이 설정 */
+}
+/* =======테이블======= */
+.table-container {
+	display: block;
+	width: 100%;
+	height: 70vh;
+	font-size: 2.2rem;
+	overflow: auto;
+}
+
+table {
+	table-layout: fixed; /* 고정된 너비 사용 가능 */
+	margin: 0 auto;
+	width: 100%;
+	position: relative;
+	border-spacing: 0 2.5rem; /*셀 간격 지정*/
+}
+
+.col1 {
+	width: 100px;
+}
+
+.col2 {
+	width: auto;
+}
+
+.col3 {
+	width: 70px;
+}
+
+.col4 {
+	width: 10px;
+}
+
+.modal {
+	display: none; /* 기본적으로 숨김 */
+	position: fixed; /* 고정 위치 */
+	width: 300px;
+	height: 300px;
+	background-color: transparent; /* 투명 */
+	z-index: 1000; /* 다른 요소들 위에 표시 */
+}
+
+.modal-content p {
+	display: flex;
+	box-sizing: border-box;
+	width : 100%;
+	padding-right: 20px; /* 오른쪽 여백 추가 */
+	justify-content: space-between;
+	align-items: center;
+	white-space: nowrap; /* 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 내용 숨기기 */
+    text-overflow: ellipsis; /* 넘치는 내용을 '...'으로 표시 */
+    margin-bottom: 20px;
+}
+
+.close {
+    cursor: pointer;
+    width: 10px;
+}
+
+.modal-content {
+	justify-content: center; /* 수직 중앙 정렬 */
+	background-color: white; /* 모달 배경 색상 */
+	background-color: #D9D9D9;
+	padding: 20px; /* 패딩 */
+	border-radius: 10px; /* 모서리 둥글게 */
+	position: absolute; /* 절대 위치 */
+	font-weight: bold;
+	text-align: center;
+}
+
+.modal-content button {
+	background-color: transparent;
+	color: black; /* 글자 색상 */
+	border: none; /* 경계선 제거 */
+	cursor: pointer; /* 커서 변경 */
+	font-size: 2rem; /* 글자 크기 */
+	margin: 10px; /* 버튼 간격 */
+	text-align: left;
+}
+
+#msgTable tr:hover .col4 {
+	visibility: visible;
+}
+
+#msgTable tr:not(hover) .col4 {
+	visibility: hidden;
+}
+
+#chatInfo1 {
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+#chatInfo2 {
+	list-style-type: none;
+	display: flex;
+	flex-direction: column;
+}
+
+li {
+	overflow: hidden; /* 넘치는 내용 숨기기 */
+	white-space: nowrap; /* 줄 바꿈 방지 */
+	text-overflow: ellipsis; /* 잘린 부분에 ... 표시하기 */
+}
+
+.profileImg {
+	width: 70px;
+	height: 70px;
+	border-radius: 50px;
+	background-color: white;
+}
+
+.username {
+	font-weight: bold;
+	font-size: 1.6rem;
+}
+
+#nowMsg {
+	font-weight: bold;
+	font-size: 1.1rem;
+	width: 100%;
+	color: gray;
+}
+
+.msgTime {
+	font-weight: bold;
+	font-size: 0.9rem;
+	color: gray;
+}
+
+.unread span {
+	background-color: rgb(194, 194, 194);;
+	color: black;
+	font-weight: bold;
+	font-size: 1rem;
+	text-align: center;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	justify-content: center;
+	align-items: center;
+}
+
+.dotImg {
+	height: 35px;
+	width: auto;
+}
+
+/* 스크롤바 설정*/
+.table-container::-webkit-scrollbar {
+	background-color: transparent;
+	width: 10px;
+}
+
+/* 스크롤바 막대 설정*/
+.table-container::-webkit-scrollbar-thumb {
+	background-color: #babac0;
+	border-radius: 16px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+	background-color: #a0a0a5;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+.table-container::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: transparent;
+}
+
+.table-container::-webkit-scrollbar-track:hover {
+	background-color: transparent;
+}
+
+.table-container::-webkit-scrollbar-button {
+	display: none;
+}

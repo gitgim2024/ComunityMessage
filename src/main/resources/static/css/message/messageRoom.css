@@ -1,0 +1,290 @@
+@charset "UTF-8";
+
+.talk-container {
+	display: block;
+	position: relative;
+	flex-direction: column;
+	align-items: center;
+	height: 100%; /* 부모 요소에 맞게 높이 설정 */
+	width: 100%;
+	overflow: hidden; /* 스크롤 숨김 */
+	background-color: white;
+}
+
+/* ======== 상단 바 ========== */
+.top {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 80px;
+	justify-content: space-between;
+	background-color: #D9D9D9;
+	justify-content: space-between;
+}
+
+.top-left {
+	margin-left: 20px;
+	position: relative;
+	display: flex;
+	color: black;
+	font-weight: bold;
+	font-size: 2rem;
+	width: 60%;
+	gap: 20px;
+	position: relative;
+}
+
+.top-right {
+	margin-right: 20px;
+	position: relative;
+	display: flex;
+	justify-content: flex-end; /* 자식 요소들을 오른쪽 정렬 */
+	width: 20%;
+	color: black;
+	font-weight: bold;
+	font-size: 2rem;
+	gap: 20px;
+}
+
+.profile-name {
+	display: inline-block; /* 또는 block */
+	max-width: 100%; /* 최대 너비 설정 */
+	height: 100%;
+	overflow: hidden; /* 넘치는 내용 숨기기 */
+	text-overflow: ellipsis; /* 잘린 부분에 ... 표시하기 */
+	white-space: nowrap;
+	overflow: hidden; /* 줄 바꿈 방지 */
+}
+
+.room-img {
+	width: 50px;
+	height: 50px;
+	border-radius: 40%;
+	float: left;
+	background-color: #f2f2f2;
+}
+
+/* ======== 중간 채팅창 ========== */
+.middle {
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	position: absolute;
+	width: 100%;
+	top: 80px;
+	height: 63%;
+	background-color: white;
+	top: 80px;
+}
+
+.other-msg {
+	display: flex;
+	flex-direction: column;
+	width: auto;
+	height: auto; position : relative;
+	left: 10px;
+	margin: 20px;
+	position: relative;
+}
+
+.my-msg {
+	display: flex;
+	flex-direction: column;
+	width: auto;
+	height: auto;
+	position: relative;
+	right: 10px;
+	margin: 20px;
+}
+
+.user-info { /*가로 배치 요소*/
+	display:flex;
+	flex-direction: row;
+	position: relative;
+}
+
+.context { /*가로 배치 요소*/
+	display: flex;
+	position: relative;
+	flex-direction: row;
+}
+
+.other-msg .context {
+	display: flex;
+	position: relative;
+	flex-direction: row;
+	margin-left: 50px;
+}
+
+.my-msg .context { /*왼쪽정렬*/
+	justify-content: flex-end;
+}
+
+.msg-img {
+	width: 50px;
+	height: 50px;
+	border-radius: 40%;
+	float: left;
+	background-color: #f2f2f2;
+}
+
+.msg-time {
+	margin-bottom: 15px;
+	margin-top: auto; /* 요소를 바닥에 붙이기 */
+	width: 80px;
+	position: relative;
+	font-size: 1rem;
+	color: #D9D9D9;
+}
+
+.msg-name {
+	font-size: 1.5rem;
+	margin-left: 10px;
+}
+
+.msg-context {
+	display: inline-block;
+	padding: 10px;
+	margin: 10px;
+	border-radius: 10px;
+	max-width: 60%;
+	font-size:1.5rem;
+	word-wrap: break-word; /* 단어가 넘칠 경우 줄 바꿈 */
+	overflow-wrap: break-word; /* 같은 기능을 가진 속성 */
+	white-space: normal; /* 줄 바꿈 허용 */
+	height: auto;
+}
+
+.other-msg .msg-context {
+	background-color: #f2f2f2;
+}
+
+.my-msg .msg-context {
+	background-color: #99ffe2;
+}
+
+/* 스크롤바 설정*/
+.middle::-webkit-scrollbar {
+	background-color: transparent;
+	width: 10px;
+}
+
+/* 스크롤바 막대 설정*/
+.middle::-webkit-scrollbar-thumb {
+	background-color: #babac0;
+	border-radius: 16px;
+}
+
+.middle::-webkit-scrollbar-thumb:hover {
+	background-color: #a0a0a5;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+.middle::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: transparent;
+}
+
+.middle::-webkit-scrollbar-track:hover {
+	background-color: transparent;
+}
+
+.middle::-webkit-scrollbar-button {
+	display: none;
+}
+/* ======== 하단 바 ========== */
+.bottom {
+	position: absolute;
+	transform: translateX(5%); /* 요소의 너비의 절반만큼 왼쪽으로 이동 */
+	bottom: 15%;
+	width: 90%;
+	height: 70px;
+	z-index: 1000; /* 다른 요소들 위에 나타나게 */
+	background-color: #D9D9D9;
+	border-radius: 10px;
+}
+
+.send-button {
+	background-color: #D9D9D9;
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	z-index: 1000;
+	cursor: pointer;
+	border-radius: 50%;
+	width: 50px;
+	height: 50px;
+	display: flex; /* Flexbox 사용 */
+	align-items: center; /* 세로 중앙 정렬 */
+	justify-content: center;
+	cursor: pointer; /* 가로 중앙 정렬 */
+}
+
+.send-button img {
+	padding-right: 5px;
+	max-width: 60%; /* 이미지 크기를 버튼 크기에 맞춤 */
+	max-height: 60%; /* 이미지 높이도 버튼 크기에 맞춤 */
+}
+
+.send-button:hover {
+	background-color: #99ffe2;
+	cursor: pointer;
+}
+
+.emoticon {
+	position: absolute;
+	right: 110px;
+	top: 20px;
+	width: 30px;
+	height: 30px;
+	-webkit-filter: opacity(.4) drop-shadow(0 0 0 grey);
+	filter: opacity(.4) drop-shadow(0 0 0 grey);
+	width: 30px;
+}
+
+.emoticon:hover {
+	right: 110px;
+	top: 20px;
+	position: absolute;
+	filter: none;
+}
+
+.file {
+	position: absolute;
+	right: 65px;
+	top: 20px;
+	width: 30px;
+	height: 30px;
+	-webkit-filter: opacity(.4) drop-shadow(0 0 0 grey);
+	filter: opacity(.4) drop-shadow(0 0 0 grey);
+	cursor: pointer;
+	width: 30px;
+}
+
+.file:hover {
+	position: absolute;
+	right: 65px;
+	top: 20px;
+	filter: none;
+	cursor: pointer;
+	bottom: 10px;
+}
+
+.textarea {
+	margin: 10px;
+	border: none;
+	width: 80%;
+	font-weight: bold;
+	font-size: 1.5rem; /* 글자 크기 설정 */
+	resize: none;
+	height: 50px;
+	outline: none;
+	font-size: 2erm;
+	resize: none; /* 사용자가 크기를 조정하지 못하도록 */
+	background-color: #D9D9D9;
+}
+
+.textarea::-webkit-scrollbar {
+	display: none; /* 웹킷 기반 브라우저에서 스크롤바 숨기기 */
+}

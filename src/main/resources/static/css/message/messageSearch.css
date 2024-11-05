@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+#tabs {
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+	flex-direction: row;
+	width: 90%;
+	justify-content: center;
+	text-align: center;
+	margin-top: 20px;
+	font-weight: bold;
+}
+
+.tab {
+	cursor: pointer; /* 마우스커서 모양변경 */
+	background: none;
+	position: relative; /* 위치 설정 */
+	overflow: visible;
+}
+
+.tab.now::after {
+	content: ''; /* 내용. 없더라도 표기. 가상요소 생성을 위한것 */
+	display: block; /* 새로운 줄에서 시작하고 전체 너비를 차지 */
+	width: 8rem; /* 선길이 */
+	height: 5px; /* 두께 */
+	background: black; /* 색상 */
+	position: absolute;
+	left: 50%; /* 가운데 정렬을 위해 */
+	transform: translateX(-50%); /* 가운데 정렬을 위해 이동 */
+	bottom: -0.5rem;
+	border-radius: 10px;
+}
+
+#result {
+	width: 100%;
+	border: none;
+	margin-top: 20px;
+}
+/* =======UserTable=======*/
+/* 체크박스 커스텀*/
+/* 요소를 숨기는 class. */
+.box {
+    position: absolute;
+    clip: rect(0 0 0 0); /* 요소를 숨기고 공간도 없앰. hidden은 공간유지. */
+    width: 1px;
+    height: 1px;
+    overflow: hidden; /* 요소의 크기를 넘어서는 콘텐츠는 보이지 않게됨*/
+}
+
+/* 체크를 안 했을 때 */
+.userCheckbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer; /* 커서 포인터로 변경 */
+    position: relative;
+}
+
+.userCheckbox span {
+    display: inline-block;
+    width: 20px; /* 체크박스 크기 */
+    height: 20px; /* 체크박스 크기 */
+    margin-right: 10px; /* label과의 여백 */
+    background-color: transparent; /* 기본 배경 투명 */
+    border: 2px solid #ccc; /* 테두리 추가 */
+    border-radius: 50%; /* 모서리 둥글게 */
+}
+
+.userCheckbox:hover span {
+    background-color: #9f9f9f; /* 배경색을 변경 */
+    transform: scale(1.2); /* 약간 확대 */
+}
+
+/* 체크했을 때 */
+.box:checked + span { /* +는 형제요소 선택 */
+    background-image: url("../../images/message/check.png"); /* 체크 상태의 이미지 */
+	background-color : #b3b3b3;
+	background-size : 20px 20px;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+/* 확인버튼 */
+#confirmButton{
+	display: none;
+	position: absolute;
+	bottom: 20%;
+	left: 50%; /* 가로 중앙에 위치 */
+	transform: translateX(-50%); /* 중앙 정렬 */
+    border: none;
+    display: inline-block;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-size:1.5rem;
+    font-weight: bold;
+    width: 10rem;
+    height: 3rem;
+    background-color:white;
+    z-index: 10; /* 다른 요소들 위에 놓이도록 설정 */
+}
+@keyframes ring { /* 퍼져나가는 효과 */
+    0% {
+        width: 3rem;
+        height: 3rem;
+        opacity: 1;
+    }
+    100% {
+        width: 10rem;
+        height: 10rem;
+        opacity: 0;
+    }
+}
+
+#confirmButton:hover::after{
+	display: block;
+	content: "";
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 6px solid white;
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ring 1s;
+}

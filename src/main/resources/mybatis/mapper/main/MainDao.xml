@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tech.whale.main.models.MainDao">
+	
+	<select id="selectUserInfo" resultType="com.tech.whale.main.models.UserInfoDto">
+        SELECT USER_NICKNAME, USER_IMAGE_URL FROM USER_INFO WHERE USER_ID = #{userId}
+    </select>
+	
+	<select id="selectLikeNotiPostId" resultType="Integer">
+        SELECT LIKE_NOTIFICATION_ONOFF FROM USER_NOTIFICATION_ONOFF WHERE USER_ID = (SELECT USER_ID FROM POST WHERE POST_ID = #{postId})
+    </select>
+    
+    <select id="selectLikeNotiFeedId" resultType="Integer">
+        SELECT LIKE_NOTIFICATION_ONOFF FROM USER_NOTIFICATION_ONOFF WHERE USER_ID = (SELECT USER_ID FROM FEED WHERE FEED_ID = #{feedId})
+    </select>
+    
+    <select id="selectCommentsNotiPostId" resultType="Integer">
+        SELECT COMMENT_NOTIFICATION_ONOFF FROM USER_NOTIFICATION_ONOFF WHERE USER_ID = (SELECT USER_ID FROM POST WHERE POST_ID = #{postId})
+    </select>
+    
+    <select id="selectCommentsNotiFeedId" resultType="Integer">
+        SELECT COMMENT_NOTIFICATION_ONOFF FROM USER_NOTIFICATION_ONOFF WHERE USER_ID = (SELECT USER_ID FROM FEED WHERE FEED_ID = #{feedId})
+    </select>
+    
+    <select id="selectPostUserId" resultType="String">
+        SELECT USER_ID FROM POST WHERE POST_ID = #{postId}
+    </select>
+    
+    <select id="selectFeedUserId" resultType="String">
+        SELECT USER_ID FROM FEED WHERE FEED_ID = #{feedId}
+    </select>
+    
+    <select id="selectFollowNotiId" resultType="Integer">
+        SELECT FOLLOW_NOTI_ID FROM FOLLOW_NOTI WHERE USER_ID = #{userId} AND FOLLOW_NOTI_USER_ID = #{targetId}
+    </select>
+    
+    <select id="getLikeNoti" resultType="com.tech.whale.main.models.LikeNotiDto">
+		SELECT
+	        LN.LIKE_NOTI_ID AS LIKE_NOTI_ID,
+	        LN.LIKE_NOTI_CHECK AS LIKE_NOTI_CHECK,
+	        LN.LIKE_NOTI_DATE AS LIKE_NOTI_DATE,
+	        LN.LIKE_NOTI_TYPE AS LIKE_NOTI_TYPE,
+	        COALESCE(PL.USER_ID, PCL.USER_ID, FL.USER_ID, FCL.USER_ID) AS TARGET_USER_ID,
+	        COALESCE(PL.POST_ID, PC.POST_ID) AS POST_ID,
+	        P.COMMUNITY_ID AS COMMUNITY_ID,
+	        COALESCE(FL.FEED_ID, FC.FEED_ID) AS FEED_ID
+	    FROM
+	        LIKE_NOTI LN
+			    LEFT JOIN POST_LIKE PL ON PL.POST_LIKE_ID = LN.POST_LIKE_ID
+			    LEFT JOIN POST_COMMENTS_LIKE PCL ON PCL.POST_COMMENTS_LIKE_ID = LN.POST_COMMENTS_LIKE_ID
+			    LEFT JOIN POST_COMMENTS PC ON PC.POST_COMMENTS_ID = PCL.POST_COMMENTS_ID
+			    LEFT JOIN POST P ON P.POST_ID = COALESCE(PL.POST_ID, PC.POST_ID)
+			    LEFT JOIN FEED_LIKE FL ON FL.FEED_LIKE_ID = LN.FEED_LIKE_ID
+		        LEFT JOIN FEED_COMMENTS_LIKE FCL ON FCL.FEED_COMMENTS_LIKE_ID = LN.FEED_COMMENTS_LIKE_ID
+		        LEFT JOIN FEED_COMMENTS FC ON FC.FEED_COMMENTS_ID = FCL.FEED_COMMENTS_ID
+	    WHERE
+	        LN.USER_ID = #{userId}
+	    ORDER BY LN.LIKE_NOTI_ID DESC
+	</select>
+	
+	<select id="getCommentsNoti" resultType="com.tech.whale.main.models.ComNotiDto">
+		SELECT
+	        CN.COMMENTS_NOTI_ID AS COMMENTS_NOTI_ID,
+	        CN.COMMENTS_NOTI_CHECK AS COMMENTS_NOTI_CHECK,
+	        CN.COMMENTS_NOTI_DATE AS COMMENTS_NOTI_DATE,
+	        COALESCE(PC.USER_ID, FC.USER_ID) AS TARGET_USER_ID,
+	        PC.POST_ID AS POST_ID,
+	        P.COMMUNITY_ID AS COMMUNITY_ID,
+	        FC.FEED_ID AS FEED_ID,
+	        PC.POST_COMMENTS_TEXT AS POST_COMMENTS_TEXT,
+	        FC.FEED_COMMENTS_TEXT AS FEED_COMMENTS_TEXT
+	    FROM
+	        COMMENTS_NOTI CN
+			    LEFT JOIN POST_COMMENTS PC ON PC.POST_COMMENTS_ID = CN.POST_COMMENTS_ID
+			    LEFT JOIN POST P ON P.POST_ID = PC.POST_ID
+		        LEFT JOIN FEED_COMMENTS FC ON FC.FEED_COMMENTS_ID = CN.FEED_COMMENTS_ID
+	    WHERE
+	        CN.USER_ID = #{userId}
+	    ORDER BY CN.COMMENTS_NOTI_ID DESC
+	</select>
+	
+	<select id="getFollowNoti" resultType="com.tech.whale.main.models.FollowNotiDto">
+		SELECT
+	        FOLLOW_NOTI_ID,
+	        FOLLOW_NOTI_CHECK,
+	        FOLLOW_NOTI_DATE,
+	        FOLLOW_NOTI,
+	        USER_ID,
+	        FOLLOW_NOTI_USER_ID AS TARGET_USER_ID
+	    FROM
+	        FOLLOW_NOTI
+	    WHERE
+	        USER_ID = #{userId}
+	    ORDER BY FOLLOW_NOTI_ID DESC
+	</select>
+	
+	<insert id="insertPostLikeNoti">
+		INSERT INTO LIKE_NOTI (LIKE_NOTI_ID,LIKE_NOTI_TYPE,USER_ID,POST_LIKE_ID)
+		VALUES (LIKE_NOTI_SEQ.NEXTVAL,
+			   '게시글',
+			   (SELECT USER_ID FROM POST WHERE POST_ID = #{postId}),
+			   (SELECT POST_LIKE_ID FROM POST_LIKE WHERE POST_ID = #{postId} AND USER_ID = #{userId})
+		)
+	</insert>
+	
+	<insert id="insertFeedLikeNoti">
+		INSERT INTO LIKE_NOTI (LIKE_NOTI_ID,LIKE_NOTI_TYPE,USER_ID,FEED_LIKE_ID)
+		VALUES (LIKE_NOTI_SEQ.NEXTVAL,
+			   '피드',
+			   (SELECT USER_ID FROM FEED WHERE FEED_ID = #{feedId}),
+			   (SELECT FEED_LIKE_ID FROM FEED_LIKE WHERE FEED_ID = #{feedId} AND USER_ID = #{userId})
+		)
+	</insert>
+	
+	<insert id="insertPostCommentsNoti">
+		INSERT INTO COMMENTS_NOTI (COMMENTS_NOTI_ID,USER_ID,POST_COMMENTS_ID)
+		VALUES (COMMENTS_NOTI_SEQ.NEXTVAL,
+			   (SELECT USER_ID FROM POST WHERE POST_ID = #{postId}),
+			   (SELECT MAX(POST_COMMENTS_ID) FROM POST_COMMENTS WHERE POST_ID = #{postId} AND USER_ID = #{userId} AND POST_COMMENTS_TEXT = #{commentText})
+		)
+	</insert>
+	
+	<insert id="insertFeedCommentsNoti">
+		INSERT INTO COMMENTS_NOTI (COMMENTS_NOTI_ID,USER_ID,FEED_COMMENTS_ID)
+		VALUES (COMMENTS_NOTI_SEQ.NEXTVAL,
+			   (SELECT USER_ID FROM FEED WHERE FEED_ID = #{feedId}),
+			   (SELECT MAX(FEED_COMMENTS_ID) FROM FEED_COMMENTS WHERE FEED_ID = #{feedId} AND USER_ID = #{userId} AND FEED_COMMENTS_TEXT = #{commentText})
+		)
+	</insert>
+	
+	<insert id="insertFollowNoti">
+		INSERT INTO FOLLOW_NOTI (FOLLOW_NOTI_ID,FOLLOW_NOTI,USER_ID,FOLLOW_NOTI_USER_ID)
+		VALUES (FOLLOW_NOTI_SEQ.NEXTVAL,
+			   #{followNotiType},
+			   #{userId},
+			   #{targetId}
+		)
+	</insert>
+	
+	<update id="updateLikeNoti">
+		UPDATE LIKE_NOTI SET LIKE_NOTI_CHECK = 1 WHERE LIKE_NOTI_ID = #{like_noti_id}
+	</update>
+	
+	<update id="updateCommentsNoti">
+		UPDATE COMMENTS_NOTI SET COMMENTS_NOTI_CHECK = 1 WHERE COMMENTS_NOTI_ID = #{comments_noti_id}
+	</update>
+	
+	<update id="updateFollowNoti">
+		UPDATE FOLLOW_NOTI SET FOLLOW_NOTI_CHECK = 1 WHERE FOLLOW_NOTI_ID = #{followNotiId}
+	</update>
+	
+	<delete id="deleteLikeNoti">
+    	DELETE FROM LIKE_NOTI WHERE LIKE_NOTI_ID = #{like_noti_id}
+    </delete>
+    
+    <delete id="deleteCommentsNoti">
+    	DELETE FROM COMMENTS_NOTI WHERE COMMENTS_NOTI_ID = #{comments_noti_id}
+    </delete>
+    
+    <delete id="deleteFollowNoti">
+		DELETE FROM FOLLOW_NOTI WHERE USER_ID = #{userId} AND FOLLOW_NOTI_USER_ID = #{targetId}
+	</delete>
+	
+	<delete id="deleteFollowNotiSetting">
+		DELETE FROM FOLLOW_NOTI WHERE USER_ID = #{userId} AND FOLLOW_NOTI = 1
+	</delete>
+	
+</mapper>

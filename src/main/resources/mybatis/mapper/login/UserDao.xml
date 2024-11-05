@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tech.whale.login.dao.UserDao">
+
+    <insert id="insertUserInfo">
+        INSERT INTO USER_INFO (USER_ID, USER_PASSWORD, USER_EMAIL, USER_NICKNAME, USER_SPOTIFY_ID)
+        VALUES (#{user_id}, #{user_password}, #{user_email}, #{user_nickname}, #{user_spotify_id})
+    </insert>
+    
+    <insert id="insertUserNotification">
+        INSERT INTO USER_NOTIFICATION_ONOFF (USER_ID) VALUES (#{user_id})
+    </insert>
+    
+    <insert id="insertPageAccessSetting">
+        INSERT INTO PAGE_ACCESS_SETTING (USER_ID) VALUES (#{user_id})
+    </insert>
+    
+    <insert id="insertStartPageSetting">
+        INSERT INTO STARTPAGE_SETTING (USER_ID) VALUES (#{user_id})
+    </insert>
+    
+    <insert id="insertBlock">
+        INSERT INTO BLOCK (USER_ID) VALUES (#{user_id})
+    </insert>
+    
+    <insert id="insertUserSetting">
+        INSERT INTO USER_SETTING (USER_ID) VALUES (#{user_id})
+    </insert>
+    
+    <insert id="insertFollow">
+        INSERT INTO FOLLOW (FOLLOW_ID,USER_ID) VALUES (FOLLOW_SEQ.NEXTVAL,#{user_id})
+    </insert>
+    
+    <select id="selectFollowId" resultType="Integer">
+        SELECT FOLLOW_ID FROM FOLLOW WHERE USER_ID = #{user_id}
+    </select>
+    
+    <insert id="insertProfile">
+        INSERT INTO PROFILE (PROFILE_ID,USER_ID,FOLLOW_ID) VALUES (PROFILE_SEQ.NEXTVAL,#{user_id},#{followId})
+    </insert>
+    
+    <select id="checkAccessId" resultType="Integer">
+        SELECT USER_ACCESS_ID FROM USER_INFO WHERE USER_ID = #{user_id}
+    </select>
+
+    <!-- 사용자 비밀번호 가져오기 -->
+    <select id="getPasswordByUsername" resultType="String">
+        SELECT USER_PASSWORD FROM USER_INFO WHERE USER_ID = #{user_id}
+    </select>
+
+    <!-- 사용자 정보 저장 -->
+    <insert id="saveUser">
+        INSERT INTO USER_INFO (USER_ID, USER_PASSWORD, USER_EMAIL) VALUES (#{user_id}, #{password}, #{email})
+    </insert>
+
+    <!-- 이메일 존재 여부 확인 -->
+    <select id="existsByEmail" resultType="Integer">
+        SELECT COUNT(*) FROM USER_INFO WHERE USER_EMAIL = #{email}
+    </select>
+
+    <!-- 비밀번호 재설정 토큰 저장 -->
+    <insert id="saveResetToken">
+        INSERT INTO PASSWORD_RESETS (USER_ID, TOKEN) VALUES (#{user_id}, #{token})
+    </insert>
+
+    <!-- 유효한 토큰 확인 -->
+    <select id="isValidToken" resultType="Integer">
+        SELECT COUNT(*) FROM PASSWORD_RESETS WHERE TOKEN = #{token}
+    </select>
+
+    <!-- 토큰을 사용하여 비밀번호 업데이트 -->
+    <update id="updatePasswordByToken">
+        UPDATE USER_INFO
+        SET USER_PASSWORD = #{hashedPassword}
+        WHERE USER_ID = (SELECT USER_ID FROM PASSWORD_RESETS WHERE TOKEN = #{token})
+    </update>
+
+    <!-- 사용자 아이디 가져오기 -->
+    <select id="getUserIdByEmail" resultType="String">
+        SELECT USER_ID FROM USER_INFO WHERE USER_EMAIL = #{email}
+    </select>
+
+</mapper>

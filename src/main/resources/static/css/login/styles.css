@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: 0;
+}
+body {
+  min-height: 100vh;
+}
+
+.flexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 90px;
+  background-color: #1f1f1f;
+  border-bottom: 1.5px solid #cecece;
+}
+.headerItems {
+  width: 170px;
+}
+
+#whale-logo:hover {
+	cursor: grab;
+}
+
+#whale-logo:active {
+	cursor: grab;
+}
+
+.main {
+  width: 100%;
+  background-color: #1f1f1f;
+}
+
+/* 로그인 및 회원가입, 아이디/비밀번호 찾기 폼 스타일 */
+.loginJoin, .findBox, .resetBox{
+  width: 45%;
+  height: 90%;
+  background-color: #202020;
+  border: 1px solid #cecece;
+  border-radius: 100px;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  color: #ffffff;
+}
+.loginJoin-container, .findBox-container, .resetBox-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45%;
+  height: 80%;
+  background-color: #2e2e2e;
+  border-radius: 40px;
+}
+.loginJoin-title, .findBox-title, .resetBox-title {
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  opacity: 0.75;
+}
+form {
+  margin: 20px 0;
+}
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  width: 65%;
+  padding: 10px;
+  margin: 5px 0;
+  outline: none;
+}
+button[type="submit"] {
+  margin-top: 25px;
+  padding: 10px 40px;
+  background-color: #cecece;
+  border: 1px solid #282828;
+  border-radius: 15px;
+  color: #2e2e2e;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+button#start-register, button#start-find {
+  color: #cecece;
+  text-decoration: none;
+  font-size: 12px;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.loginJoin-footer, .loginForgot-footer {
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  opacity: 0.75;
+}
+a {
+  color: #cecece;
+  text-decoration: none;
+  font-size: 12px;
+}
+a:hover {
+  cursor: pointer;
+}
+#message {
+  margin-top: 40px;
+  margin-bottom: 90px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  opacity: 0.88;
+}
