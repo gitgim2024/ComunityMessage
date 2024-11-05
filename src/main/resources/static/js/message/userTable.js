@@ -25,12 +25,11 @@ $(document).ready(function() {
 		// 체크된 체크박스 목록 가져오기
 		var checkboxes = document.querySelectorAll('.box:checked'); //선택된 체크박스 가져오기
 		var selectedIds = Array.from(checkboxes).map(x => x.dataset.id); // 선택된 체크박스의 data-id 속성 값을 배열로 저장
-		var tabId = $('.tab.now').data("tab");
-
+		console.log()
 		$.ajax({
 			url: 'messageRoom',
 			method: 'POST',
-			data: { selectedIds: selectedIds, tabId: tabId }, // 선택된 ID 배열
+			data: { selectedIds: selectedIds }, // 선택된 ID 배열
 			traditional: true, // 배열을 전송할 때 필요. 이 옵션을 설정하면, 배열의 요소가 일반적인 쿼리 문자열 형식으로 전송
 			success: function(response) {
 				// 요청 성공 시 처리
