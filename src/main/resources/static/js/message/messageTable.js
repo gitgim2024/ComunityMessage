@@ -56,4 +56,25 @@ $(document).ready(function() {
             modal.style.display = "none";
         }
     };
+	
 });
+
+function goToMessageRoom(roomId,userList) {
+	   $.ajax({
+	          url: 'messageRoom', // 서버로 보낼 URL
+	          method: 'POST', // HTTP 요청 방식
+	          data: {
+	              roomId: roomId,
+	              userList: userList
+	          },
+	          success: function(response) {
+	              // 성공적으로 응답을 받았을 때의 처리
+				  // 요청 성공 시 처리
+				  $('.message-container').html(response); // 받아온 데이터를 #result에 삽입
+	          },
+	          error: function(jqXHR, textStatus, errorThrown) {
+	              // 오류 발생 시 처리
+	              console.error("에러 발생: ", textStatus, errorThrown);
+	          }
+	      });
+   }

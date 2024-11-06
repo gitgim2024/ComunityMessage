@@ -1,63 +1,69 @@
 package com.tech.whale.message.controllers;
 
-import java.lang.reflect.Array;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.tech.whale.message.dao.MessageDao;
+import com.tech.whale.message.dto.MessageRoomDto;
+import com.tech.whale.message.service.MsgHomeService;
+import com.tech.whale.message.service.MsgRoomService;
+import com.tech.whale.message.service.MsgSerchService;
+import com.tech.whale.message.service.MsgServiceInter;
+
 @Controller
 @RequestMapping("message")
 public class MessageController {
+	MsgServiceInter msgService;
+	@Autowired
+	private MessageDao iDao;
+
 	@RequestMapping("/home")
-	public String settingHome(HttpServletRequest request, HttpSession session, Model model) {
+	public String settingHome(HttpServletRequest request, Model model) {
 		System.out.println(">>[JAVA] MessageController : settingHome");
-		String[] test = new String[] { "A", "B", "C", "D", "E", "F", "G" };
-		model.addAttribute("list", test);
+		model.addAttribute("request", request);
+		msgService = new MsgHomeService(iDao);
+		msgService.execute(model);
 		return "message/messageHome";
 	}
 
 	@RequestMapping("/messageSearch")
-	public String messageSearch(HttpServletRequest request, HttpSession session, Model model) {
+	public String messageSearch(HttpServletRequest request, Model model) {
 		System.out.println(">>[JAVA] MessageController : messageSearch");
-		String[] test = new String[] { "1", "2" };
-		model.addAttribute("list", test);
+		// Gson 객체 생성
+	    Gson gson = new Gson();
+	    // JSON 문자열을 List<MessageRoomDto>로 변환
+	    List<MessageRoomDto> msgRoomList = 
+	    		gson.fromJson(request.getParameter("list"),
+	    				new TypeToken<List<MessageRoomDto>>() {}.getType());
+		model.addAttribute("list", msgRoomList);
 		return "message/messageSearch";
 	}
 
 	@RequestMapping("/search")
-	public String search(HttpServletRequest request, HttpSession session, Model model) {
-		String tabId = request.getParameter("tabId");
-		System.out.println(">>[JAVA] MessageController : search : " + tabId);
+	public String search(HttpServletRequest request, Model model) {
+		System.out.println(">>[JAVA] MessageController : search");
+		model.addAttribute("request", request);
+		MsgSerchService msgService = new MsgSerchService(iDao);
+		msgService.execute(model);
 
-		if (tabId.equals("msg")) {
-			String[] test = new String[] { "가", "나" };
-			model.addAttribute("list", test);
-			return "message/messageTable";
-		} else {
-			String[] test = new String[] { "user1", "user2", "user3", "user4", "user5", "user6" };
-			model.addAttribute("list", test);
-			return "message/userTable";
-		}
+		return msgService.getReturnURL();
 	}
 
 	@RequestMapping("/messageRoom")
-	public String messageRoom(HttpServletRequest request, HttpSession session, Model model) {
-
-		String tabId = request.getParameter("tabId");
-		System.out.println(">>[JAVA] MessageController : messageRoom : ");
-
-		String[] selectedIds = request.getParameterValues("selectedIds");
-
-		String ids = String.join(", ", selectedIds);
-
-		System.out.println(">>>>>온거 확인 : " + ids);
-
-		model.addAttribute("ids", ids);
+	public String messageRoom(HttpServletRequest request, Model model) {
+//		String tabId = request.getParameter("tabId");
+		System.out.println(">>[JAVA] MessageController : messageRoom");
+		model.addAttribute("request", request);
+		msgService = new MsgRoomService(iDao);
+		msgService.execute(model);
 		return "message/messageRoom";
 	}
 

@@ -105,7 +105,7 @@ table {
 }
 
 .col3 {
-	width: 70px;
+	width: 100px;
 }
 
 .col4 {
@@ -124,19 +124,19 @@ table {
 .modal-content p {
 	display: flex;
 	box-sizing: border-box;
-	width : 100%;
+	width: 100%;
 	padding-right: 20px; /* 오른쪽 여백 추가 */
 	justify-content: space-between;
 	align-items: center;
 	white-space: nowrap; /* 줄바꿈 방지 */
-    overflow: hidden; /* 넘치는 내용 숨기기 */
-    text-overflow: ellipsis; /* 넘치는 내용을 '...'으로 표시 */
-    margin-bottom: 20px;
+	overflow: hidden; /* 넘치는 내용 숨기기 */
+	text-overflow: ellipsis; /* 넘치는 내용을 '...'으로 표시 */
+	margin-bottom: 20px;
 }
 
 .close {
-    cursor: pointer;
-    width: 10px;
+	cursor: pointer;
+	width: 10px;
 }
 
 .modal-content {
@@ -168,14 +168,14 @@ table {
 	visibility: hidden;
 }
 
-#chatInfo1 {
+.chatInfo1 {
 	list-style-type: none;
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
 }
 
-#chatInfo2 {
+.chatInfo2 {
 	list-style-type: none;
 	display: flex;
 	flex-direction: column;
@@ -199,7 +199,7 @@ li {
 	font-size: 1.6rem;
 }
 
-#nowMsg {
+.nowMsg {
 	font-weight: bold;
 	font-size: 1.1rem;
 	width: 100%;
@@ -211,7 +211,15 @@ li {
 	font-size: 0.9rem;
 	color: gray;
 }
-
+.chatInfo2 li {
+	display: flex; /* Flexbox 사용 */
+	justify-content: center; /* 수평 중앙 정렬 */
+	align-items: center; /* 수직 중앙 정렬 */
+}
+.unread{
+	min-height: 20px;
+	margin-top: 5px;
+}
 .unread span {
 	background-color: rgb(194, 194, 194);;
 	color: black;

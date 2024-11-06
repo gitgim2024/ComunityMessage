@@ -40,7 +40,7 @@ public class MainRestController {
 		HashMap<String, Object> map = new HashMap<>();
 		
 		map.put("nickname",userInfos[0]);
-		map.put("imageUrl",userInfos[1]);
+		map.put("imageUrl","/static/images/setting/"+userInfos[1]);
 		
 		return map;
 	}

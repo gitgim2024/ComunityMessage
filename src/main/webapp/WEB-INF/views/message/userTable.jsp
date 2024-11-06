@@ -5,12 +5,12 @@
 <div class="table-container">
 	<table>
 		<c:forEach items="${list }" var="item">
-			<tr id="${item}">
+			<tr id="${item.user_id}">
 				<td class="col1"><img class="profileImg"
 					src="../static/images/message/test/people.png" alt="이전" /></td>
-				<td class="col2 username">유저A</td>
+				<td class="col2 username">${item.user_id}</td>
 				<td class="col3"><label class="userCheckbox"> <input
-						type="checkbox" class="box" data-id="${item}"> <span></span>
+						type="checkbox" class="box" data-id="${item.user_id}"> <span></span>
 						<!-- 체크박스 모양을 위한 span -->
 				</label></td>
 			</tr>

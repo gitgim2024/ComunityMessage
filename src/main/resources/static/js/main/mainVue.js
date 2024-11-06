@@ -11,7 +11,7 @@ const app = createApp({
 			frameNames: ['leftIframe','rightIframe'],
 			whaleAddress: ['streaming','message/home','communityHome','feedHome','profile','settingHome','communityDetail','feedDetail','profileHome'],
 			userInfo: [],
-			startPage: [ 'streaming', 'message/home' ],
+			startPage: [ 'message/home', 'message/home' ],
 			pageAccess: [0,1,1,0],
 			notifications: [[],[],[],[]],
 			notiCounts: [0,0,0,0],

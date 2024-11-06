@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tech.whale.message.dao.MessageDao">
+	<insert id="createRoomID"
+		parameterType="com.tech.whale.message.dto.MessageRoomDto">
+		<selectKey keyProperty="message_room_id" resultType="int"
+			order="BEFORE">
+			SELECT MESSAGE_ROOM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO MESSAGE_ROOM (MESSAGE_ROOM_ID) VALUES(#{message_room_id})
+	</insert>
+
+	<select id="roomExist" resultType="Integer">
+		SELECT MESSAGE_ROOM_ID FROM MESSAGE_ROOM_USER GROUP BY MESSAGE_ROOM_ID
+		HAVING COUNT(DISTINCT
+		USER_ID) = #{param2} AND SUM(CASE WHEN USER_ID IN
+		<foreach item="userId" collection="param1" open="("
+			separator="," close=")">
+			#{userId}
+		</foreach>
+		THEN 1 ELSE 0 END) = #{param2}
+	</select>
+
+	<insert id="addRoomUser">
+		INSERT ALL
+		<foreach item="id" collection="Ids">
+			INTO MESSAGE_ROOM_USER (MESSAGE_ROOM_ID, USER_ID) VALUES (#{roomID},
+			#{id})
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+
+	<insert id="addMessage"
+		parameterType="com.tech.whale.message.dto.MessageDto">
+		<selectKey keyProperty="message_id" resultType="int"
+			order="BEFORE">
+			SELECT MESSAGE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO MESSAGE ( MESSAGE_ID, MESSAGE_CREATE_DATE,
+		MESSAGE_CONTEXT, MESSAGE_ROOM_ID, USER_ID)
+		VALUES ( #{message_id},
+		SYSTIMESTAMP, #{message_context}, #{message_room_id} , #{user_id})
+	</insert>
+
+	<insert id="addMsgImg"
+		parameterType="com.tech.whale.message.dto.MessageImageDto">
+		<selectKey keyProperty="img_id" resultType="int"
+			order="BEFORE">
+			SELECT MESSAGE_IMAGE_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO MESSAGE_IMAGE (IMG_ID, IMG_ORG_NAME) VALUES (#{img_id},
+		#{img_org_name})
+	</insert>
+
+	<update id="updateMsgImg"
+		parameterType="com.tech.whale.message.dto.MessageImageDto">
+		UPDATE MESSAGE_IMAGE
+		SET
+		IMG_CHG_NAME = #{img_chg_name},
+		IMG_SAVEPATH = #{img_savepath},
+		IMG_URL = #{img_url}
+		WHERE IMG_ID = #{img_id}
+	</update>
+
+	<update id="updateImgMsgID">
+		UPDATE MESSAGE_IMAGE
+		SET MESSAGE_ID = #{message_id}
+		WHERE IMG_ID IN
+		<foreach item="id" collection="imagesArray" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+
+	<select id="getImages" parameterType="int"
+		resultType="com.tech.whale.message.dto.MessageImageDto">
+		SELECT *
+		FROM MESSAGE_IMAGE
+		WHERE MESSAGE_ID = #{param1}
+	</select>
+
+	<select id="getMessageById" parameterType="int"
+		resultType="com.tech.whale.message.dto.MessageDto">
+		SELECT *
+		FROM MESSAGE
+		WHERE MESSAGE_ID = #{param1}
+	</select>
+
+	<select id="getMessagesByRoom" parameterType="int"
+		resultType="com.tech.whale.message.dto.MessageDto">
+		SELECT *
+		FROM MESSAGE
+		WHERE MESSAGE_ROOM_ID = #{param1}
+		ORDER BY MESSAGE_ID ASC
+	</select>
+
+	<select id="getMyMsgRoom" parameterType="String"
+		resultType="java.lang.Integer">
+		SELECT DISTINCT MESSAGE_ROOM_ID
+		FROM MESSAGE_ROOM_USER
+		WHERE USER_ID = #{userId}
+	</select>
+
+	<select id="getRoomUsers" parameterType="int"
+		resultType="String">
+		SELECT DISTINCT USER_ID
+		FROM MESSAGE_ROOM_USER
+		WHERE MESSAGE_ROOM_ID = #{message_room_id}
+	</select>
+
+	<select id="getRoomLastMsg" parameterType="int"
+		resultType="com.tech.whale.message.dto.MessageDto">
+		SELECT *
+		FROM MESSAGE
+		WHERE MESSAGE_ID = (
+		SELECT MAX(MESSAGE_ID)
+		FROM MESSAGE
+		WHERE MESSAGE_ROOM_ID = #{message_room_id})
+	</select>
+
+	<select id="unreadMsgCnt" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		MESSAGE_READ
+		WHERE ROOM_ID = #{message_room_id}
+		AND USER_ID = #{user_id}
+		AND MESSAGE_READ_BOOL = '0'
+	</select>
+
+	<delete id="deleteRoom" parameterType="int">
+		DELETE FROM MESSAGE_ROOM
+		WHERE MESSAGE_ROOM_ID = #{message_room_id}
+	</delete>
+
+	<select id="getMsgFilter" resultType="com.tech.whale.message.dto.MessageDto">
+		SELECT *
+		FROM MESSAGE M
+		WHERE M.MESSAGE_ID IN (
+		SELECT M2.MESSAGE_ID
+		FROM MESSAGE M2
+		WHERE M2.MESSAGE_ROOM_ID IN
+		<foreach item="roomId" collection="roomList" open="(" separator="," close=")">
+			#{roomId}
+		</foreach>
+		AND (M2.MESSAGE_CONTEXT LIKE CONCAT('%', #{searchInput}, '%')
+		OR M2.USER_ID LIKE CONCAT('%', #{searchInput}, '%'))
+		AND M2.MESSAGE_CREATE_DATE = (
+		SELECT MAX(M3.MESSAGE_CREATE_DATE)
+		FROM MESSAGE M3
+		WHERE M3.MESSAGE_ROOM_ID = M2.MESSAGE_ROOM_ID
+		)
+		)
+		ORDER BY M.MESSAGE_CREATE_DATE DESC
+	</select>
+	
+	<select id="getFollowFilter" parameterType="String" resultType="String">
+	    WITH FOLLOW_LIST AS (
+	        SELECT TRIM(REGEXP_SUBSTR(FOLLOW_USER_ID, '[^,]+', 1, LEVEL)) AS FOLLOW_USER
+	        FROM FOLLOW
+	        WHERE USER_ID = #{user_id}
+	        CONNECT BY REGEXP_SUBSTR(FOLLOW_USER_ID, '[^,]+', 1, LEVEL) IS NOT NULL
+	    ), FOLLOW_IDS AS (
+	        SELECT *
+	        FROM FOLLOW F
+	        WHERE F.USER_ID IN (SELECT FOLLOW_USER FROM FOLLOW_LIST)
+	    )
+	    SELECT USER_ID
+	    FROM FOLLOW_IDS
+	    WHERE ',' || REPLACE(FOLLOW_USER_ID, ' ', '') || ',' LIKE '%,' || #{user_id} || ',%'
+	</select>
+	
+	<select id="getFollowUsers" parameterType="java.util.List" resultType="com.tech.whale.message.dto.MessageUserInfoDto">
+	    SELECT *
+	    FROM USER_INFO
+	    WHERE USER_ID IN 
+	    <foreach item="userId" collection="followList" open="(" separator="," close=")">
+	        #{userId}
+	    </foreach>
+	</select>
+	
+	<select id="getUsersById" parameterType="String" resultType="com.tech.whale.message.dto.MessageUserInfoDto">
+	    SELECT *
+		FROM USER_INFO
+		WHERE USER_ID LIKE '%'|| #{searchInput}||'%'
+	</select>
+	
+	
+
+
+</mapper>

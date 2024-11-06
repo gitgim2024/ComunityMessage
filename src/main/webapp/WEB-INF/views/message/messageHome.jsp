@@ -11,7 +11,10 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <link rel="stylesheet" href="../static/css/message/messageHome.css">
 <script type="text/javascript"
-	src="../static/js/message/messageCommon.js"></script>
+	src="${pageContext.request.contextPath}/static/js/message/messageCommon.js"></script>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/static/js/message/messageHome.js"></script>
+	<script type="module" src="${pageContext.request.contextPath}/static/js/message/emojiPicker.js"></script>
 
 <meta charset="UTF-8" />
 <title>Message Home</title>
